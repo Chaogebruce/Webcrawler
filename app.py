@@ -4,7 +4,7 @@
 __author__ = 'Bruce Chen'
 
 import socket
-
+from bs4 import BeautifulSoup
 def fetch(url):
     sock = socket.socket()
     sock.connect(('guazi.com',80))
@@ -15,7 +15,10 @@ def fetch(url):
     while chunk:
         response += chunk
         chunk = sock.recv(4096)
-    head,data = str(response).split('\r\n\r\n')
-    print(head)
+    soup = BeautifulSoup(response, 'lxml')
+    t= ''
+    for link in soup.findAll('a'):
+        t += str(link.get('href')) + '\r\n'
+    print(t)
 
 fetch('/sh/')
